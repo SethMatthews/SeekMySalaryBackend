@@ -1,4 +1,6 @@
 
+ 
+
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from bs4 import SoupStrainer as strainer
@@ -6,15 +8,12 @@ import requests
 import lxml
 import json
 import numpy as np
+import re
 
 
 
 def main_function(url_from_lambda):
 
-    print(" url from lambda is ")
-    print(url_from_lambda)
-
-    job_url = url_from_lambda
 
     def create_soup(url):
         page = requests.get(url)
@@ -28,11 +27,10 @@ def main_function(url_from_lambda):
         return soup.title.text , soup.select_one('[data-automation="advertiser-name"]').text
 
 
-    job_url_soup = create_soup(job_url)
-    jobTitle, advertiser_name = find_title_create_soup(job_url)
+    
 
 
-    import re
+    
     def all_indexes_of_substring(string):
         indexes = []
         for match in re.finditer(r'-', string):
@@ -63,11 +61,7 @@ def main_function(url_from_lambda):
 
     def find_Job_ID(job_url):
         return find_between(job_url,"job/","?")
-    global_JobID = find_Job_ID(job_url)
-
-
-
-    global_job_ID_search_string = "href=\"/job/"+ global_JobID
+    
 
     def does_job_exist(JobID,url):
         page = requests.get(url)
@@ -82,7 +76,7 @@ def main_function(url_from_lambda):
 
 
 
-    global_this_company_jobs_url = create_jobsearch_url()
+    
 
     def check_for_min_value(value,url): #return equal, too small, too high
         if does_job_exist(global_JobID,generate_query_url(0,value,global_this_company_jobs_url))==False:
@@ -148,6 +142,14 @@ def main_function(url_from_lambda):
             # Element is not present in the array
             return -1
 
+    job_url = url_from_lambda
+
+    job_url_soup = create_soup(job_url)
+    jobTitle, advertiser_name = find_title_create_soup(job_url)
+    global_JobID = find_Job_ID(job_url)
+
+    global_job_ID_search_string = "href=\"/job/"+ global_JobID
+    global_this_company_jobs_url = create_jobsearch_url()
 
     low_arr = np.arange(1, 350000, 1000)
     result = lowvalue_binary_search(low_arr, 0, len(low_arr)-1, job_url)
@@ -180,9 +182,3 @@ def lambda_handler(event, context):
             "Access-Control-Allow-Origin" : '*'
         }
     }
-
-
-
-#lambda_event_sample = {'version': '2.0', 'routeKey': 'GET /get-salary', 'rawPath': '/get-salary', 'rawQueryString': 'id=66986610', 'headers': {'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7', 'accept-encoding': 'gzip, deflate, br', 'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8', 'content-length': '0', 'host': 'l7nvlry05d.execute-api.us-east-1.amazonaws.com', 'sec-ch-ua': '"Google Chrome";v="111", "Not(A:Brand";v="8", "Chromium";v="111"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"macOS"', 'sec-fetch-dest': 'document', 'sec-fetch-mode': 'navigate', 'sec-fetch-site': 'none', 'sec-fetch-user': '?1', 'upgrade-insecure-requests': '1', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36', 'x-amzn-trace-id': 'Root=1-6445f440-73da9be157133431206ddc3e', 'x-forwarded-for': '202.153.220.224', 'x-forwarded-port': '443', 'x-forwarded-proto': 'https'}, 'queryStringParameters': {'id': '66986610'}, 'requestContext': {'accountId': '524870747371', 'apiId': 'l7nvlry05d', 'domainName': 'l7nvlry05d.execute-api.us-east-1.amazonaws.com', 'domainPrefix': 'l7nvlry05d', 'http': {'method': 'GET', 'path': '/get-salary', 'protocol': 'HTTP/1.1', 'sourceIp': '202.153.220.224', 'userAgent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'}, 'requestId': 'D3MaDhVtIAMEVww=', 'routeKey': 'GET /get-salary', 'stage': '$default', 'time': '24/Apr/2023:03:15:12 +0000', 'timeEpoch': 1682306112073}, 'isBase64Encoded': False}
-
-#lambda_handler(lambda_event_sample,"lamnda event context filler")
