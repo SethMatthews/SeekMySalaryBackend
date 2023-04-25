@@ -1,6 +1,6 @@
-class SalarySearchObject:
-    def __init__(self,jobId):
-        self.jobId = jobId
+class SalarySearchJobObject:
+    def __init__(self):
+        self.jobId = ""
         self.jobTitle = ""
         self.advertiserName = ""
         self.jobUrl = ""
@@ -9,6 +9,9 @@ class SalarySearchObject:
 
     def get_jobId(self):
         return self.jobId
+    
+    def set_jobId(self,jobId):
+        self.jobId = jobId
     
     def get_jobTitle(self):
         return self.jobTitle
