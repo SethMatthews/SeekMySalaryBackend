@@ -6,6 +6,7 @@ class SalarySearchJobObject:
         self.jobUrl = ""
         self.jobSoup = ""
         self.salaryRange = ""
+        self.requests_page = ""
 
     def get_jobId(self):
         return self.jobId
@@ -43,6 +44,12 @@ class SalarySearchJobObject:
     
     def set_salaryRange(self,salaryRange):
         self.salaryRange = salaryRange
+    
+    def get_requests_page(self):
+        return self.requests_page
+    
+    def set_requests_page(self,requests_page):
+        self.requests_page = requests_page
 
 
 
