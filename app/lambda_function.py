@@ -17,13 +17,14 @@ def create_soup(url_for_soup):
     return soup
 
 def find_title_and_advertiser_name(url_of_job_advert):
-    '''Returns the job's title and advertiser name for the given url'''
+    '''Returns the job's title as a string and job's advertiser name as a string, for the given url of the job'''
     page = requests.get(url_of_job_advert)
     soup = BeautifulSoup(page.content, "html.parser")
     return soup.title.text , soup.select_one('[data-automation="advertiser-name"]').text
 
 
-def all_indexes_of_substring(string):
+def all_indexes_of_hyphen_in_string(string):
+    '''Returns an array containing all the indexes of the hypen character of a given string'''
     indexes = []
     for match in re.finditer(r'-', string):
         indexes.append(match.start())
@@ -32,13 +33,14 @@ def all_indexes_of_substring(string):
 
 #Platform Engineer - AWS Cloud Job in North Sydney, Sydney NSW - SEEK
 def create_jobsearch_url(job_title, advertiser_name):
+    '''Returns a url which will will produce a Seek search in which the job should be present with no salary filters'''
     string = str(job_title)
     title_string = string[0:string.index(" Job")].strip()
     title_string += " "+ str(advertiser_name).strip()
     title_string = title_string.replace('-', '+').replace(' ', '-')+"-jobs"
     location_string = string[string.index("in "):string.index(" - SEEK")].strip().replace(',', '').replace('-', '+').replace(' ', '-')
-    if location_string.count("-")>2:
-        indexes = all_indexes_of_substring(location_string)
+    if location_string.count("-")>2:    #this checks for location edge case when more parts of typical location is specified
+        indexes = all_indexes_of_hyphen_in_string(location_string)
         location_string = "in"+location_string[indexes[len(indexes)-2]:]
     return "https://www.seek.com.au/"+title_string+"/"+location_string
     
