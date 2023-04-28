@@ -9,12 +9,6 @@ import numpy as np
 
 
 
-def create_soup(url_for_soup):
-    '''Returns BeautifulSoup Object for the given url_for_soup parameter'''
-    page = requests.get(url_for_soup)
-    filtered_page = strainer("a", href=True)
-    soup = BeautifulSoup(page.content, "lxml", parse_only=filtered_page)
-    return soup
 
 def find_title_and_advertiser_name(url_of_job_advert):
     '''Returns the job's title as a string and job's advertiser name as a string, for the given url of the job'''
@@ -109,7 +103,6 @@ def lambda_handler(event, context):
     print(event)
     job_url = f"https://www.seek.com.au/job/{event['queryStringParameters']['id']}?"  
 
-    job_url_soup = create_soup(job_url)
     job_title, advertiser_name = find_title_and_advertiser_name(job_url)
 
     job_id = str(event['queryStringParameters']['id'])
@@ -117,19 +110,14 @@ def lambda_handler(event, context):
 
     array_min_salary_binary_search = np.arange(1, 350000, 1000)
     result_index_array_min_salary = min_salary_binary_search(array_min_salary_binary_search, 0, len(array_min_salary_binary_search)-1, job_url,job_id, job_search_results_url)
-
-
+    
     array_max_salary_binary_search = np.arange(array_min_salary_binary_search[result_index_array_min_salary], 350000, 1000)
+    result_index_array_max_salary = max_salary_binary_search(array_max_salary_binary_search, 0, len(array_max_salary_binary_search)-1, job_url, job_id, job_search_results_url)
 
-    high_result_index = max_salary_binary_search(array_max_salary_binary_search, 0, len(array_max_salary_binary_search)-1, job_url, job_id, job_search_results_url)
+    output_salary_range = f"The Role: {job_title} is paying around the ${str(array_min_salary_binary_search[result_index_array_min_salary])} - ${str(array_max_salary_binary_search[result_index_array_max_salary])}"
 
-    output_salary_range = f"The Role: {job_title} is paying around the ${str(array_min_salary_binary_search[result_index_array_min_salary])} - ${str(array_max_salary_binary_search[high_result_index])}"
-
-    print("returning the body as")
-    print(output_salary_range)
-    statusCode = 200
     return {
-        'statusCode': statusCode,
+        'statusCode': 200,
         'body': json.dumps(output_salary_range),
         "headers":{
             "Content-Type": "application/json",
