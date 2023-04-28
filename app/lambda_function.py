@@ -42,7 +42,7 @@ def create_jobsearch_url(job_title, advertiser_name):
     if location_string.count("-")>2:    #this checks for location edge case when more parts of typical location is specified
         indexes = all_indexes_of_hyphen_in_string(location_string)
         location_string = "in"+location_string[indexes[len(indexes)-2]:]
-    return "https://www.seek.com.au/"+title_string+"/"+location_string
+    return f"https://www.seek.com.au/{title_string}/{location_string}"
     
 
 def is_job_id_in_search(job_id,url_to_search):
@@ -53,9 +53,9 @@ def is_job_id_in_search(job_id,url_to_search):
     return soup.text != ""
 
 
-def generate_query_url(min,max,url):
-    print(url + "?salaryrange="+str(min)+"-"+str(max)+"&salarytype=annual") #dleete after 
-    return url + "?salaryrange="+str(min)+"-"+str(max)+"&salarytype=annual"
+def generate_query_url(min_salary,max_salary,url_to_adapt):
+    print(url_to_adapt + "?salaryrange="+str(min_salary)+"-"+str(max_salary)+"&salarytype=annual") #delete after 
+    return f"{url_to_adapt}?salaryrange={min_salary}-{max_salary}&salarytype=annual"
 
 
 
