@@ -114,7 +114,10 @@ def lambda_handler(event, context):
     array_max_salary_binary_search = np.arange(array_min_salary_binary_search[result_index_array_min_salary], 350000, 1000)
     result_index_array_max_salary = max_salary_binary_search(array_max_salary_binary_search, 0, len(array_max_salary_binary_search)-1, job_url, job_id, job_search_results_url)
 
-    output_salary_range = f"The Role: {job_title} is paying around the ${str(array_min_salary_binary_search[result_index_array_min_salary])} - ${str(array_max_salary_binary_search[result_index_array_max_salary])}"
+    minimum_salary_of_job = str(array_min_salary_binary_search[result_index_array_min_salary])
+    maximum_salary_of_job = str(array_max_salary_binary_search[result_index_array_max_salary])
+
+    output_salary_range = f"The Role: {job_title} is paying around the ${minimum_salary_of_job} - ${maximum_salary_of_job}"
 
     return {
         'statusCode': 200,
