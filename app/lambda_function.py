@@ -9,14 +9,16 @@ import re
 
 
 
-def create_soup(url):
-    page = requests.get(url)
-    only_item_cells = strainer("a", href=True)
-    soup = BeautifulSoup(page.content, "lxml", parse_only=only_item_cells)
+def create_soup(url_for_soup):
+    '''Returns BeautifulSoup Object for the given url_for_soup parameter'''
+    page = requests.get(url_for_soup)
+    filtered_page = strainer("a", href=True)
+    soup = BeautifulSoup(page.content, "lxml", parse_only=filtered_page)
     return soup
 
-def find_title_create_soup(url):
-    page = requests.get(url)
+def find_title_and_advertiser_name(url_of_job_advert):
+    '''Returns the job's title and advertiser name for the given url'''
+    page = requests.get(url_of_job_advert)
     soup = BeautifulSoup(page.content, "html.parser")
     return soup.title.text , soup.select_one('[data-automation="advertiser-name"]').text
 
@@ -49,14 +51,14 @@ def find_between( s, first, last ):
     except ValueError:
         return ""
 
-def find_Job_ID(job_url):
+def find_job_id(job_url):
     return find_between(job_url,"job/","?")
 
 
-def does_job_exist(JobID,url):
+def is_job_id_in_search(job_id,url):
     page = requests.get(url)
-    only_item_cells = strainer('article',{"data-job-id" : str(JobID)}) #data-job-id="66089824"
-    soup = BeautifulSoup(page.content, 'html.parser', parse_only=only_item_cells)
+    filtered_page = strainer('article',{"data-job-id" : str(job_id)}) #data-job-id="66089824"
+    soup = BeautifulSoup(page.content, 'html.parser', parse_only= filtered_page)
     return soup.text != ""
 
 
@@ -67,16 +69,16 @@ def generate_query_url(min,max,url):
 
 
 def check_for_min_value(value,job_search_results_url,job_id): #return equal, too small, too high
-    if does_job_exist(job_id,generate_query_url(0,value,job_search_results_url))==False:
+    if is_job_id_in_search(job_id,generate_query_url(0,value,job_search_results_url))==False:
         return "too small"
-    if does_job_exist(job_id,generate_query_url(0,value-1000,job_search_results_url))==True:
+    if is_job_id_in_search(job_id,generate_query_url(0,value-1000,job_search_results_url))==True:
         return "too high"
     return "equal"
 
 def check_for_max_value(value,job_search_results_url, job_id): #return equal, too small, too high
-    if does_job_exist(job_id,generate_query_url(value,350000,job_search_results_url))== False:
+    if is_job_id_in_search(job_id,generate_query_url(value,350000,job_search_results_url))== False:
         return "too high"
-    if does_job_exist(job_id,generate_query_url(value+1000,350000,job_search_results_url))==True:
+    if is_job_id_in_search(job_id,generate_query_url(value+1000,350000,job_search_results_url))==True:
         return "too small"
     return "equal" 
 
@@ -138,9 +140,9 @@ def lambda_handler(event, context):
     job_url = "https://www.seek.com.au/job/"+str(event['queryStringParameters']['id'])+"?"  
 
     job_url_soup = create_soup(job_url)
-    job_title, advertiser_name = find_title_create_soup(job_url)
+    job_title, advertiser_name = find_title_and_advertiser_name(job_url)
 
-    job_id = find_Job_ID(job_url)
+    job_id = find_job_id(job_url)
     #global_job_ID_search_string = "href=\"/job/"+ job_id
     job_search_results_url = create_jobsearch_url(job_title, advertiser_name)
 
