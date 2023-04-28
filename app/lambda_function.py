@@ -5,7 +5,7 @@ import requests
 import lxml
 import json
 import numpy as np
-import re
+
 
 
 
@@ -22,12 +22,12 @@ def find_title_and_advertiser_name(url_of_job_advert):
     soup = BeautifulSoup(page.content, "html.parser")
     return soup.title.text , soup.select_one('[data-automation="advertiser-name"]').text
 
-
 def all_indexes_of_hyphen_in_string(string):
     '''Returns an array containing all the indexes of the hypen character of a given string'''
     indexes = []
-    for match in re.finditer(r'-', string):
-        indexes.append(match.start())
+    for index in string:
+        if index == "-":
+            indexes.append(index)
     return indexes
 
 
@@ -45,20 +45,9 @@ def create_jobsearch_url(job_title, advertiser_name):
     return "https://www.seek.com.au/"+title_string+"/"+location_string
     
 
-def find_between( s, first, last ):
-    try:
-        start = s.index( first ) + len( first )
-        end = s.index( last, start )
-        return s[start:end]
-    except ValueError:
-        return ""
-
-def find_job_id(job_url):
-    return find_between(job_url,"job/","?")
-
-
-def is_job_id_in_search(job_id,url):
-    page = requests.get(url)
+def is_job_id_in_search(job_id,url_to_search):
+    '''Returns True if the job id is present in the Seek search of the given url parameter'''
+    page = requests.get(url_to_search)
     filtered_page = strainer('article',{"data-job-id" : str(job_id)}) #data-job-id="66089824"
     soup = BeautifulSoup(page.content, 'html.parser', parse_only= filtered_page)
     return soup.text != ""
@@ -144,7 +133,7 @@ def lambda_handler(event, context):
     job_url_soup = create_soup(job_url)
     job_title, advertiser_name = find_title_and_advertiser_name(job_url)
 
-    job_id = find_job_id(job_url)
+    job_id = str(event['queryStringParameters']['id'])
     #global_job_ID_search_string = "href=\"/job/"+ job_id
     job_search_results_url = create_jobsearch_url(job_title, advertiser_name)
 
