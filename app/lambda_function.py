@@ -76,53 +76,30 @@ def check_for_max_value(salary_to_check,job_search_results_url, job_id): #return
     return "equal" 
 
 def min_salary_binary_search(arr, low, high, url,job_id, job_search_results_url):
+    "A recursive binary search to find the minimum salary limit of the job_id specified"
     if high >= low:
         mid = (high + low) // 2
-
-        # If element is present at the middle itself
         if check_for_min_value(arr[mid],job_search_results_url,job_id)  == "equal":
             return mid
-
-        # If element is smaller than mid, then it can only
-        # be present in left subarray
         elif check_for_min_value(arr[mid],job_search_results_url, job_id)  == "too high":
             return min_salary_binary_search(arr, low, mid - 1, url,job_id, job_search_results_url)
-
-        # Else the element can only be present in right subarray
         else:
             return min_salary_binary_search(arr, mid + 1, high, url, job_id, job_search_results_url)
-
     else:
-        # Element is not present in the array
         return -1
 
-
-# Returns index of x in arr if present, else -1
 def max_salary_binary_search(arr, low, high, url, job_id, job_search_results_url):
-
-    # Check base case
+    "A recursive binary search to find the maximum salary limit of the job_id specified"
     if high >= low:
-
         mid = (high + low) // 2
-
-        # If element is present at the middle itself
         if check_for_max_value(arr[mid],job_search_results_url, job_id)  == "equal":
             return mid
-
-        # If element is smaller than mid, then it can only
-        # be present in left subarray
         elif check_for_max_value(arr[mid],job_search_results_url, job_id)  == "too high":
             return max_salary_binary_search(arr, low, mid - 1, url, job_id, job_search_results_url)
-
-        # Else the element can only be present in right subarray
         else:
             return max_salary_binary_search(arr, mid + 1, high, url, job_id, job_search_results_url)
-
     else:
-        # Element is not present in the array
         return -1
-
-
 
 
 
@@ -130,7 +107,7 @@ def lambda_handler(event, context):
 
     print("event is")
     print(event)
-    job_url = "https://www.seek.com.au/job/"+str(event['queryStringParameters']['id'])+"?"  
+    job_url = f"https://www.seek.com.au/job/{event['queryStringParameters']['id']}?"  
 
     job_url_soup = create_soup(job_url)
     job_title, advertiser_name = find_title_and_advertiser_name(job_url)
