@@ -27,7 +27,7 @@ class LambdaFunctionIntegrationTests(unittest.TestCase):
         result = lambda_function.lambda_handler(sample_event,0)
         expected_result = {
             'statusCode': 200,
-            'body': json.dumps("The Role: Solution Architect Job in Melbourne VIC - SEEKis paying aroung the $150001- $199001"),
+            'body': json.dumps("The Role: Solution Architect Job in Melbourne VIC - SEEK is paying around the $150001 - $199001"),
             "headers":{
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin" : '*'
