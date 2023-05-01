@@ -2,18 +2,18 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from bs4 import SoupStrainer as strainer
 import requests
-import lxml
 import json
 import numpy as np
 
 
+def create_page_requests_object(url_to_request):
+    '''Returns the requests_object, from the response of the given url'''
+    return requests.get(url_to_request)
 
 
-
-def find_title_and_advertiser_name(url_of_job_advert):
+def find_title_and_advertiser_name(page_requests_object):
     '''Returns the job's title as a string and job's advertiser name as a string, for the given url of the job'''
-    page = requests.get(url_of_job_advert)
-    soup = BeautifulSoup(page.content, "html.parser")
+    soup = BeautifulSoup(page_requests_object.content, "html.parser")
     return soup.title.text , soup.select_one('[data-automation="advertiser-name"]').text
 
 def all_indexes_of_hyphen_in_string(string):
@@ -70,7 +70,7 @@ def check_for_max_value(salary_to_check,job_search_results_url, job_id): #return
     return "equal" 
 
 def min_salary_binary_search(arr, low, high, url,job_id, job_search_results_url):
-    "A recursive binary search to find the minimum salary limit of the job_id specified"
+    '''A recursive binary search to find the minimum salary limit of the job_id specified'''
     if high >= low:
         mid = (high + low) // 2
         if check_for_min_value(arr[mid],job_search_results_url,job_id)  == "equal":
@@ -103,7 +103,8 @@ def lambda_handler(event, context):
     print(event)
     job_url = f"https://www.seek.com.au/job/{event['queryStringParameters']['id']}?"  
 
-    job_title, advertiser_name = find_title_and_advertiser_name(job_url)
+    page_requests_object = create_page_requests_object(job_url)
+    job_title, advertiser_name = find_title_and_advertiser_name(page_requests_object)
 
     job_id = str(event['queryStringParameters']['id'])
     job_search_results_url = create_jobsearch_url(job_title, advertiser_name)
