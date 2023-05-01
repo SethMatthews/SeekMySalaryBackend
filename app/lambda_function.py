@@ -10,7 +10,6 @@ def create_page_requests_object(url_to_request):
     '''Returns the requests_object, from the response of the given url'''
     return requests.get(url_to_request)
 
-
 def find_title_and_advertiser_name(page_requests_object):
     '''Returns the job's title as a string and job's advertiser name as a string, for the given url of the job'''
     soup = BeautifulSoup(page_requests_object.content, "html.parser")
@@ -19,8 +18,8 @@ def find_title_and_advertiser_name(page_requests_object):
 def all_indexes_of_hyphen_in_string(string):
     '''Returns an array containing all the indexes of the hypen character of a given string'''
     indexes = []
-    for index in string:
-        if index == "-":
+    for index in range(len(string)):
+        if string[index] == "-":
             indexes.append(index)
     return indexes
 
@@ -101,12 +100,13 @@ def lambda_handler(event, context):
 
     print("event is")
     print(event)
-    job_url = f"https://www.seek.com.au/job/{event['queryStringParameters']['id']}?"  
+
+    job_id = str(event['queryStringParameters']['id'])
+    job_url = f"https://www.seek.com.au/job/{job_id}?"  
 
     page_requests_object = create_page_requests_object(job_url)
     job_title, advertiser_name = find_title_and_advertiser_name(page_requests_object)
 
-    job_id = str(event['queryStringParameters']['id'])
     job_search_results_url = create_jobsearch_url(job_title, advertiser_name)
 
     array_min_salary_binary_search = np.arange(1, 350000, 1000)
