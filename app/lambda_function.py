@@ -6,13 +6,14 @@ import json
 import numpy as np
 
 
-def create_page_requests_object(url_to_request):
-    '''Returns the requests_object, from the response of the given url'''
-    return requests.get(url_to_request)
-
-def find_title_and_advertiser_name(page_requests_object):
+def find_title_and_advertiser_name(url_to_request):
     '''Returns the job's title as a string and job's advertiser name as a string, for the given url of the job'''
-    soup = BeautifulSoup(page_requests_object.content, "html.parser")
+    print("url is ")
+    print(url_to_request)
+    page_request = requests.get(url_to_request)
+    soup = BeautifulSoup(page_request.content, "html.parser")
+    print(soup.title.text)
+    print( soup.select_one('[data-automation="advertiser-name"]').text)
     return soup.title.text , soup.select_one('[data-automation="advertiser-name"]').text
 
 def all_indexes_of_hyphen_in_string(string):
@@ -47,7 +48,6 @@ def is_job_id_in_search(job_id,url_to_search):
 
 
 def generate_query_url(min_salary,max_salary,url_to_adapt):
-    print(url_to_adapt + "?salaryrange="+str(min_salary)+"-"+str(max_salary)+"&salarytype=annual") #delete after 
     return f"{url_to_adapt}?salaryrange={min_salary}-{max_salary}&salarytype=annual"
 
 
@@ -98,14 +98,10 @@ def max_salary_binary_search(arr, low, high, url, job_id, job_search_results_url
 
 def lambda_handler(event, context):
 
-    print("event is")
-    print(event)
-
     job_id = str(event['queryStringParameters']['id'])
     job_url = f"https://www.seek.com.au/job/{job_id}?"  
 
-    page_requests_object = create_page_requests_object(job_url)
-    job_title, advertiser_name = find_title_and_advertiser_name(page_requests_object)
+    job_title, advertiser_name = find_title_and_advertiser_name(job_url)
 
     job_search_results_url = create_jobsearch_url(job_title, advertiser_name)
 
