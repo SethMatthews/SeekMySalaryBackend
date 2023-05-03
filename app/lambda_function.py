@@ -121,5 +121,8 @@ def lambda_handler(event, context):
         }
     }
 
+# Lambda must be configured with Python 3.9 runtime
+
+
 # Setting up CICD with AWS Codepipeline and Lambda
 # https://www.youtube.com/watch?v=AmHZxULclLQ&t=592s&ab_channel=FelixYu
