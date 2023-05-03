@@ -8,12 +8,8 @@ import numpy as np
 
 def find_title_and_advertiser_name(url_to_request):
     '''Returns the job's title as a string and job's advertiser name as a string, for the given url of the job'''
-    print("url is ")
-    print(url_to_request)
     page_request = requests.get(url_to_request)
     soup = BeautifulSoup(page_request.content, "html.parser")
-    print(soup.title.text)
-    print( soup.select_one('[data-automation="advertiser-name"]').text)
     return soup.title.text , soup.select_one('[data-automation="advertiser-name"]').text
 
 def all_indexes_of_hyphen_in_string(string):
