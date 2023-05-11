@@ -117,7 +117,7 @@ def lambda_handler(event, context):
         'body': json.dumps(output_salary_range),
         "headers":{
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin" : '*'
+            "Access-Control-Allow-Origin" : 'http://127.0.0.1:5500/'
         }
     }
 
