@@ -93,6 +93,8 @@ def max_salary_binary_search(arr, low, high, url, job_id, job_search_results_url
 
 
 def lambda_handler(event, context):
+    print("Event is ")
+    print(event)
 
     job_id = str(event['queryStringParameters']['id'])
     job_url = f"https://www.seek.com.au/job/{job_id}?"  
