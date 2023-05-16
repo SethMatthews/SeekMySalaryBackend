@@ -68,9 +68,10 @@ def min_salary_binary_search(arr, low, high, url,job_id, job_search_results_url)
     '''A recursive binary search to find the minimum salary limit of the job_id specified'''
     if high >= low:
         mid = (high + low) // 2
-        if check_for_min_value(arr[mid],job_search_results_url,job_id)  == "equal":
+        isThisMinValue = check_for_min_value(arr[mid],job_search_results_url,job_id)
+        if isThisMinValue  == "equal":
             return mid
-        elif check_for_min_value(arr[mid],job_search_results_url, job_id)  == "too high":
+        elif isThisMinValue  == "too high":
             return min_salary_binary_search(arr, low, mid - 1, url,job_id, job_search_results_url)
         else:
             return min_salary_binary_search(arr, mid + 1, high, url, job_id, job_search_results_url)
@@ -81,9 +82,10 @@ def max_salary_binary_search(arr, low, high, url, job_id, job_search_results_url
     "A recursive binary search to find the maximum salary limit of the job_id specified"
     if high >= low:
         mid = (high + low) // 2
-        if check_for_max_value(arr[mid],job_search_results_url, job_id)  == "equal":
+        isThisMaxValue = check_for_max_value(arr[mid],job_search_results_url, job_id)
+        if isThisMaxValue  == "equal":
             return mid
-        elif check_for_max_value(arr[mid],job_search_results_url, job_id)  == "too high":
+        elif isThisMaxValue  == "too high":
             return max_salary_binary_search(arr, low, mid - 1, url, job_id, job_search_results_url)
         else:
             return max_salary_binary_search(arr, mid + 1, high, url, job_id, job_search_results_url)
