@@ -113,7 +113,7 @@ def format_job_title(job_description_string):
     return job_title
 
 def format_job_location(job_description_string):
-    job_location = job_description_string[job_description_string.index("in "):job_description_string.index(" - SEEK")].strip()
+    job_location = job_description_string[job_description_string.index("in ")+3:job_description_string.index(" - SEEK")].strip()
     return job_location
 
 
@@ -131,7 +131,7 @@ def lambda_handler(event, context):
 
     job_search_results_url = create_jobsearch_url(job_description_string, advertiser_name)
 
-    array_min_salary_binary_search = np.arange(1, 350000, 1000)
+    array_min_salary_binary_search = np.arange(0, 350000, 1000)
     result_index_array_min_salary = min_salary_binary_search(array_min_salary_binary_search, 0, len(array_min_salary_binary_search)-1, job_url,job_id, job_search_results_url)
     
     array_max_salary_binary_search = np.arange(array_min_salary_binary_search[result_index_array_min_salary], 350000, 1000)
