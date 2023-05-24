@@ -31,6 +31,7 @@ class LambdaFunctionIntegrationTests(unittest.TestCase):
 
         response_json = {
         "jobTitle":"Software Engineer (.Net, TypeScript)",
+        "jobCompany":"Inlogik Pty Ltd",
         "jobLocation":"Melbourne VIC",
         "minSalary":str(100000),
         "maxSalary":str(200000)

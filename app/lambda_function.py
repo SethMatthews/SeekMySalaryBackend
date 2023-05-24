@@ -144,6 +144,7 @@ def lambda_handler(event, context):
 
     response_json = {
         "jobTitle":format_job_title(job_description_string),
+        "jobCompany":advertiser_name,
         "jobLocation":format_job_location(job_description_string),
         "minSalary":minimum_salary_of_job,
         "maxSalary":maximum_salary_of_job
