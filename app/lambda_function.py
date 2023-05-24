@@ -50,17 +50,17 @@ def generate_query_url(min_salary,max_salary,url_to_adapt):
 
 def check_for_min_value(salary_to_check,job_search_results_url,job_id): 
     '''Checks if given salary_to_check is equal, smaller, or higher than minimum salary of job specified'''
-    if is_job_id_in_search(job_id,generate_query_url(0,salary_to_check,job_search_results_url))==False:
+    if is_job_id_in_search(job_id,generate_query_url(0,salary_to_check+1,job_search_results_url))==False:
         return "too small"
-    if is_job_id_in_search(job_id,generate_query_url(0,salary_to_check-1000,job_search_results_url))==True:
+    if is_job_id_in_search(job_id,generate_query_url(0,salary_to_check-1,job_search_results_url))==True:
         return "too high"
     return "equal"
 
 def check_for_max_value(salary_to_check,job_search_results_url, job_id): #return equal, too small, too high
     '''Checks if given salary_to_check is equal, smaller, or higher than maximum salary of job specified'''
-    if is_job_id_in_search(job_id,generate_query_url(salary_to_check,350000,job_search_results_url))== False:
+    if is_job_id_in_search(job_id,generate_query_url(salary_to_check-1,350000,job_search_results_url))== False:
         return "too high"
-    if is_job_id_in_search(job_id,generate_query_url(salary_to_check+1000,350000,job_search_results_url))==True:
+    if is_job_id_in_search(job_id,generate_query_url(salary_to_check+1,350000,job_search_results_url))==True:
         return "too small"
     return "equal" 
 

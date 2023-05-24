@@ -33,7 +33,7 @@ class LambdaFunctionIntegrationTests(unittest.TestCase):
         "jobTitle":"Software Engineer (.Net, TypeScript)",
         "jobLocation":"Melbourne VIC",
         "minSalary":str(100000),
-        "maxSalary":str(199000)
+        "maxSalary":str(200000)
     }
         
         expected_result = {
