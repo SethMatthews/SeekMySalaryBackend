@@ -93,6 +93,32 @@ def max_salary_binary_search(arr, low, high, url, job_id, job_search_results_url
         return -1
 
 
+#Platform Engineer - AWS Cloud Job in North Sydney, Sydney NSW - SEEK
+def create_jobsearch_url(job_title, advertiser_name):
+    '''Returns a url which will will produce a Seek search in which the job should be present with no salary filters'''
+    string = str(job_title)
+    title_string = string[0:string.index(" Job")].strip()
+    title_string += " "+ str(advertiser_name).strip()
+    title_string = title_string.replace('-', '+').replace(' ', '-')+"-jobs"
+    location_string = string[string.index("in "):string.index(" - SEEK")].strip().replace(',', '').replace('-', '+').replace(' ', '-')
+    if location_string.count("-")>2:    #this checks for location edge case when more parts of typical location is specified
+        indexes = all_indexes_of_hyphen_in_string(location_string)
+        location_string = "in"+location_string[indexes[len(indexes)-2]:]
+    return f"https://www.seek.com.au/{title_string}/{location_string}"
+
+
+
+def format_job_title(job_description_string):
+    job_title = job_description_string[0:job_description_string.index(" Job")].strip()
+    return job_title
+
+def format_job_location(job_description_string):
+    job_location = job_description_string[job_description_string.index("in "):job_description_string.index(" - SEEK")].strip()
+    return job_location
+
+
+
+
 
 def lambda_handler(event, context):
     print("Event is ")
@@ -101,9 +127,9 @@ def lambda_handler(event, context):
     job_id = str(event['queryStringParameters']['id'])
     job_url = f"https://www.seek.com.au/job/{job_id}?"  
 
-    job_title, advertiser_name = find_title_and_advertiser_name(job_url)
+    job_description_string, advertiser_name = find_title_and_advertiser_name(job_url)
 
-    job_search_results_url = create_jobsearch_url(job_title, advertiser_name)
+    job_search_results_url = create_jobsearch_url(job_description_string, advertiser_name)
 
     array_min_salary_binary_search = np.arange(1, 350000, 1000)
     result_index_array_min_salary = min_salary_binary_search(array_min_salary_binary_search, 0, len(array_min_salary_binary_search)-1, job_url,job_id, job_search_results_url)
@@ -114,10 +140,11 @@ def lambda_handler(event, context):
     minimum_salary_of_job = str(array_min_salary_binary_search[result_index_array_min_salary])
     maximum_salary_of_job = str(array_max_salary_binary_search[result_index_array_max_salary])
 
-    #output_salary_range = f"The Role: {job_title} is paying around the ${minimum_salary_of_job} - ${maximum_salary_of_job}"
+    #output_salary_range = f"The Role: {job_description_string} is paying around the ${minimum_salary_of_job} - ${maximum_salary_of_job}"
 
     response_json = {
-        "jobTitle":job_title,
+        "jobTitle":format_job_title(job_description_string),
+        "jobLocation":format_job_location(job_description_string),
         "minSalary":minimum_salary_of_job,
         "maxSalary":maximum_salary_of_job
     }
