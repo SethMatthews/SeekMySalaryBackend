@@ -114,11 +114,17 @@ def lambda_handler(event, context):
     minimum_salary_of_job = str(array_min_salary_binary_search[result_index_array_min_salary])
     maximum_salary_of_job = str(array_max_salary_binary_search[result_index_array_max_salary])
 
-    output_salary_range = f"The Role: {job_title} is paying around the ${minimum_salary_of_job} - ${maximum_salary_of_job}"
+    #output_salary_range = f"The Role: {job_title} is paying around the ${minimum_salary_of_job} - ${maximum_salary_of_job}"
+
+    response_json = {
+        "jobTitle":job_title,
+        "minSalary":minimum_salary_of_job,
+        "maxSalary":maximum_salary_of_job
+    }
 
     return {
         'statusCode': 200,
-        'body': json.dumps(output_salary_range),
+        'body': json.dumps(response_json),
         # "headers":{
         #     "Content-Type": "application/json",
         #     "Access-Control-Allow-Origin" : "http://127.0.0.1:5500/"
