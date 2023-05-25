@@ -147,7 +147,8 @@ def lambda_handler(event, context):
         "jobCompany":advertiser_name,
         "jobLocation":format_job_location(job_description_string),
         "minSalary":minimum_salary_of_job,
-        "maxSalary":maximum_salary_of_job
+        "maxSalary":maximum_salary_of_job,
+        "jobUrl":job_url
     }
 
     return {
