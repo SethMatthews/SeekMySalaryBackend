@@ -138,6 +138,10 @@ def lambda_handler(event, context):
     result_index_array_max_salary = max_salary_binary_search(array_max_salary_binary_search, 0, len(array_max_salary_binary_search)-1, job_url, job_id, job_search_results_url)
 
     minimum_salary_of_job = str(array_min_salary_binary_search[result_index_array_min_salary])
+
+    if result_index_array_max_salary == -1 : #Check incase no max salary entered 
+        result_index_array_min_salary = len(array_max_salary_binary_search)-1
+
     maximum_salary_of_job = str(array_max_salary_binary_search[result_index_array_max_salary])
 
     #output_salary_range = f"The Role: {job_description_string} is paying around the ${minimum_salary_of_job} - ${maximum_salary_of_job}"
