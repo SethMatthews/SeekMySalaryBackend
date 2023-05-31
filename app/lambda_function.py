@@ -139,8 +139,8 @@ def lambda_handler(event, context):
 
     minimum_salary_of_job = str(array_min_salary_binary_search[result_index_array_min_salary])
 
-    if result_index_array_max_salary == -1 : #Check incase no max salary entered 
-        result_index_array_max_salary = len(array_max_salary_binary_search)-1
+    # if result_index_array_max_salary == -1 : #Check incase no max salary entered 
+    #     result_index_array_max_salary = len(array_max_salary_binary_search)-1
 
     maximum_salary_of_job = str(array_max_salary_binary_search[result_index_array_max_salary])
 
