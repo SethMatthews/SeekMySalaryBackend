@@ -164,7 +164,7 @@ def lambda_handler(event, context):
         # }
         'headers': {
             'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Origin': 'https://seekmysalary.com, http://127.0.0.1:5500/',
+            'Access-Control-Allow-Origin': 'https://seekmysalary.com',
             'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
         }
         }
